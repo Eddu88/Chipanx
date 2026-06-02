@@ -15,29 +15,20 @@
   transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
+html, body {
   height: 100%;
-}
-
-section {
-  scroll-snap-align: start;
-  scroll-margin-top: 80px; /* navbar offset */
-  height: 100vh;
-  overflow-y: auto;
+  overflow: hidden; /* el scroll lo maneja el div raíz */
 }
 
 body {
   font-family: var(--font-sans);
 }
 
-/* Hide scrollbar for clean view where applicable */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+section {
+  scroll-margin-top: 80px;
+  min-height: 100vh;       /* min en vez de height fijo */
+  /* SIN overflow-y: auto  ← esto era el culpable principal */
 }
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

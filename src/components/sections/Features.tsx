@@ -10,7 +10,7 @@ export function Features({ lang }: FeaturesProps) {
   const t = translations[lang];
 
   return (
-    <section className="relative py-28 overflow-hidden bg-zinc-950 lg:h-screen lg:overflow-hidden min-h-screen snap-start scroll-mt-20 flex items-center">
+    <section className="relative py-28 overflow-hidden bg-zinc-950 lg:h-screen lg:overflow-hidden min-h-screen snap-start scroll-mt-20 flex items-center" id="features">
 
       {/* Grayscale factory parallax layer */}
       <div

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, useRef, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { translations, Language, PageType } from './types';
 
@@ -20,7 +20,95 @@ import { Calculator } from './components/sections/Calculator';
 import { Clients } from './components/sections/Clients';
 import { Contact } from './components/sections/Contact';
 
+// Section labels for tooltips
+const SECTION_LABELS: Record<string, Record<'es' | 'en', string>> = {
+  hero: { es: 'Inicio', en: 'Home' },
+  welcome: { es: 'Nosotros', en: 'About' },
+  features: { es: 'Ventajas', en: 'Features' }
+};
+
+interface SectionIndicatorProps {
+  sectionIds: string[];
+  scrollContainer: React.RefObject<HTMLDivElement | null>;
+  lang: 'es' | 'en';
+}
+
+function SectionIndicator({ sectionIds, scrollContainer, lang }: SectionIndicatorProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const container = scrollContainer.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean) as HTMLElement[];
+
+      const containerTop = container.scrollTop;
+      const containerHeight = container.clientHeight;
+      const center = containerTop + containerHeight * 0.25; // 25% threshold
+
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      sections.forEach((el, i) => {
+        const dist = Math.abs(el.offsetTop + el.offsetHeight / 2 - center);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIdx = i;
+        }
+      });
+      setActiveIndex(closestIdx);
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial execution
+    handleScroll();
+    
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [sectionIds, scrollContainer]);
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    const container = scrollContainer.current;
+    if (el && container) {
+      container.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-4">
+      {sectionIds.map((id, i) => {
+        const label = SECTION_LABELS[id]?.[lang] || id;
+        return (
+          <button
+            key={id}
+            onClick={() => scrollTo(id)}
+            className="group flex items-center justify-end gap-3 relative focus:outline-none cursor-pointer"
+            title=""
+          >
+            {/* Tooltip name */}
+            <span className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute right-8 bg-zinc-950/90 text-white border border-zinc-800/80 text-[10px] tracking-widest uppercase font-semibold py-1.5 px-3 rounded shadow-md font-display whitespace-nowrap backdrop-blur-sm">
+              {label}
+            </span>
+            {/* Dot / line */}
+            <span
+              className={`transition-all duration-300 rounded-full
+                ${activeIndex === i
+                  ? 'w-8 h-1 bg-brand-red shadow-lg shadow-brand-red/35'
+                  : 'w-2.5 h-1 opacity-45 bg-zinc-500 group-hover:opacity-75 group-hover:bg-zinc-400'
+                }`}
+            />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function App() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isSnapping = useRef(false); // prevents loops
   // Lang state (ES default, persistent in localStorage)
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem('prodiem_lang');
@@ -84,7 +172,115 @@ export default function App() {
 
   // Scroll to top on page change
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [activePage]);
+
+  // Manual scroll snapping with smooth animation (only active on the home page)
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || activePage !== 'home') return;
+
+    let scrollTimer: ReturnType<typeof setTimeout>;
+    let lastScrollTop = container.scrollTop;
+
+    const handleScroll = () => {
+      if (isSnapping.current) {
+        lastScrollTop = container.scrollTop;
+        return;
+      }
+
+      const currentScrollTop = container.scrollTop;
+      const deltaY = currentScrollTop - lastScrollTop;
+
+      // Threshold to trigger scroll snap (e.g. 40px of scrolling in either direction)
+      if (Math.abs(deltaY) < 40) return;
+
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const sections = container.querySelectorAll('section');
+        if (!sections.length) return;
+
+        const containerHeight = container.clientHeight;
+        const containerScrollHeight = container.scrollHeight;
+
+        // Check if user is scrolled near the bottom, snap to footer
+        const isNearBottom = currentScrollTop + containerHeight >= containerScrollHeight - 120;
+        if (deltaY > 0 && isNearBottom) {
+          isSnapping.current = true;
+          container.scrollTo({
+            top: containerScrollHeight - containerHeight,
+            behavior: 'smooth',
+          });
+          setTimeout(() => {
+            isSnapping.current = false;
+            lastScrollTop = container.scrollTop;
+          }, 600);
+          return;
+        }
+
+        // If we were at the footer and scroll up, snap to the last section
+        const wasAtFooter = lastScrollTop >= containerScrollHeight - containerHeight - 50;
+        if (wasAtFooter && deltaY < 0) {
+          const target = sections[sections.length - 1] as HTMLElement;
+          isSnapping.current = true;
+          container.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: 'smooth',
+          });
+          setTimeout(() => {
+            isSnapping.current = false;
+            lastScrollTop = container.scrollTop;
+          }, 600);
+          return;
+        }
+
+        // Find the index of the section we were previously stable on
+        let currentSectionIndex = 0;
+        let closestDist = Infinity;
+        sections.forEach((section, idx) => {
+          const el = section as HTMLElement;
+          const dist = Math.abs(el.offsetTop - 80 - lastScrollTop);
+          if (dist < closestDist) {
+            closestDist = dist;
+            currentSectionIndex = idx;
+          }
+        });
+
+        // Determine the target section based on scroll direction
+        let targetIndex = currentSectionIndex;
+        if (deltaY > 0) {
+          // Scrolling down -> go to next section
+          if (currentSectionIndex < sections.length - 1) {
+            targetIndex = currentSectionIndex + 1;
+          }
+        } else {
+          // Scrolling up -> go to previous section
+          if (currentSectionIndex > 0) {
+            targetIndex = currentSectionIndex - 1;
+          }
+        }
+
+        const target = sections[targetIndex] as HTMLElement;
+        isSnapping.current = true;
+        container.scrollTo({
+          top: target.offsetTop - 80, // offset navbar
+          behavior: 'smooth',
+        });
+
+        setTimeout(() => {
+          isSnapping.current = false;
+          lastScrollTop = container.scrollTop;
+        }, 600);
+      }, 50); // very short delay for instant responsiveness
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimer);
+    };
   }, [activePage]);
 
   // Listen for ESC key to close modals
@@ -182,8 +378,11 @@ export default function App() {
   };
 
   return (
-    <div className={`h-screen overflow-y-scroll snap-y snap-mandatory flex flex-col transition-theme ${darkMode ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
-      } font-sans antialiased`}>
+    <div
+      ref={scrollContainerRef}
+      className={`h-screen overflow-y-scroll scroll-smooth flex flex-col transition-theme ${darkMode ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
+        } font-sans antialiased`}
+    >
 
       {/* ── FIXED NAVIGATION HEADER (Glassmorphism) ── */}
       <Navbar
@@ -238,6 +437,15 @@ export default function App() {
         lang={lang}
         setActivePage={setActivePage}
       />
+
+      {/* ── SECTION INDICATOR ── */}
+      {activePage === 'home' && (
+        <SectionIndicator
+          sectionIds={['hero', 'welcome', 'features']}
+          scrollContainer={scrollContainerRef}
+          lang={lang}
+        />
+      )}
 
     </div>
   );
