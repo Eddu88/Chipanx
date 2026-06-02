@@ -1,0 +1,8 @@
+{
+  "name": "PRODIEM",
+  "description": "Professional steel toll processing services with responsive layout, dark/light mode, and dual language support in Spanish and English.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

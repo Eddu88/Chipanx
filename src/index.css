@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Barlow", sans-serif;
+  --font-display: "Barlow Condensed", sans-serif;
+  --color-brand-red: #D32F2F;
+  --color-brand-red-dark: #B71C1C;
+  --color-brand-lead-dark: #121213;
+  --color-brand-lead-mid: #252627;
+  --color-brand-lead-light: #5E6166;
+}
+
+/* Custom styles for smooth transactions of dark-light selector */
+.transition-theme {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+section {
+  scroll-snap-align: start;
+  scroll-margin-top: 80px; /* navbar offset */
+  height: 100vh;
+  overflow-y: auto;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Hide scrollbar for clean view where applicable */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
