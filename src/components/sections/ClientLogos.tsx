@@ -124,7 +124,7 @@ export function ClientLogos({ lang, darkMode }: ClientLogosProps) {
   const visibleLogos = getVisibleLogos();
 
   return (
-    <section id="client-logos" className={`transition-theme lg:h-screen lg:overflow-hidden min-h-screen snap-start scroll-mt-20 flex items-center border-b ${
+    <section id="client-logos" className={`transition-theme lg:h-screen lg:overflow-hidden min-h-screen snap-start snap-always scroll-mt-20 flex items-center border-b ${
       darkMode 
         ? 'bg-zinc-950 border-zinc-900 text-white' 
         : 'bg-zinc-50 border-zinc-200 text-zinc-900'

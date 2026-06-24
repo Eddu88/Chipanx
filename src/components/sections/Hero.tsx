@@ -13,7 +13,7 @@ export function Hero({ lang, activeSlide, setActiveSlide, setActivePage }: HeroP
   const t = translations[lang];
 
   return (
-    <section className="relative h-screen overflow-hidden flex items-center bg-brand-lead-mid snap-start scroll-mt-20" id="hero">
+    <section className="relative h-screen overflow-hidden flex items-center bg-brand-lead-mid snap-start snap-always scroll-mt-20" id="hero">
 
       {/* Background Slide Elements */}
       {t.heroSlides.map((slide, idx) => {

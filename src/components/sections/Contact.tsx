@@ -93,6 +93,9 @@ export function Contact({
                   <p className="text-sm font-mono mt-0.5">
                     +51 922 488 668
                   </p>
+                  <p className="text-sm font-mono mt-0.5">
+                    +51 956 063 749
+                  </p>
                 </div>
               </div>
 
@@ -105,7 +108,7 @@ export function Contact({
                     {lang === 'es' ? 'CORREO DE CONTACTO' : 'CONTACT EMAIL'}
                   </h4>
                   <p className="text-sm font-mono mt-0.5 ">
-                    contacto@prodiem.pe
+                    ventas@prodiemsac.com
                   </p>
                 </div>
               </div>

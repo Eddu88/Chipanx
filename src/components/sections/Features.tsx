@@ -12,7 +12,7 @@ export function Features({ lang, darkMode, onNavigate }: FeaturesProps) {
   const t = translations[lang];
 
   return (
-    <section className="relative py-20 overflow-hidden bg-zinc-950 lg:h-screen lg:overflow-hidden min-h-screen snap-start scroll-mt-20 flex items-center" id="features">
+    <section className="relative py-20 overflow-hidden bg-zinc-950 lg:h-screen lg:overflow-hidden min-h-screen snap-start snap-always scroll-mt-20 flex items-center" id="features">
 
       {/* Grayscale factory parallax layer */}
       <div

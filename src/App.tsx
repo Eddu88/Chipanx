@@ -20,84 +20,50 @@ import { Clients } from './components/sections/Clients';
 import { Contact } from './components/sections/Contact';
 import { ClientLogos } from './components/sections/ClientLogos';
 
-// Section labels for tooltips
-const SECTION_LABELS: Record<string, Record<'es' | 'en', string>> = {
-  hero: { es: 'Inicio', en: 'Home' },
-  welcome: { es: 'Nosotros', en: 'About' },
-  features: { es: 'Servicios', en: 'Features' },
-  'client-logos': { es: 'Clientes', en: 'Clients' }
-};
 
-interface SectionIndicatorProps {
+
+interface DashPaginationProps {
+  activeSection: string;
   sectionIds: string[];
-  scrollContainer: React.RefObject<HTMLDivElement | null>;
   lang: 'es' | 'en';
+  onSelectSection: (id: string) => void;
 }
 
-function SectionIndicator({ sectionIds, scrollContainer, lang }: SectionIndicatorProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const container = scrollContainer.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const sections = sectionIds
-        .map((id) => document.getElementById(id))
-        .filter(Boolean) as HTMLElement[];
-
-      const containerTop = container.scrollTop;
-      const containerHeight = container.clientHeight;
-      const center = containerTop + containerHeight * 0.25; // 25% threshold
-
-      let closestIdx = 0;
-      let closestDist = Infinity;
-      sections.forEach((el, i) => {
-        const dist = Math.abs(el.offsetTop + el.offsetHeight / 2 - center);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestIdx = i;
-        }
-      });
-      setActiveIndex(closestIdx);
-    };
-
-    container.addEventListener('scroll', handleScroll, { passive: true });
-    // Initial execution
-    handleScroll();
-
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [sectionIds, scrollContainer]);
-
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    const container = scrollContainer.current;
-    if (el && container) {
-      container.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
-    }
+function DashPagination({ activeSection, sectionIds, lang, onSelectSection }: DashPaginationProps) {
+  const SECTION_LABELS: Record<string, Record<'es' | 'en', string>> = {
+    hero: { es: 'Inicio', en: 'Home' },
+    welcome: { es: 'Nosotros', en: 'About' },
+    features: { es: 'Servicios', en: 'Features' },
+    'client-logos': { es: 'Clientes', en: 'Clients' },
+    'services-engineering': { es: 'Ingeniería', en: 'Engineering' },
+    'services-fabrication': { es: 'Fabricación', en: 'Fabrication' },
+    'services-electromechanical': { es: 'Electromecánica', en: 'Electromechanical' },
+    'services-services': { es: 'Área de Servicios', en: 'Service Area' }
   };
 
   return (
-    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-4">
-      {sectionIds.map((id, i) => {
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-3">
+      {sectionIds.map((id) => {
+        const isActive = activeSection === id;
         const label = SECTION_LABELS[id]?.[lang] || id;
         return (
           <button
             key={id}
-            onClick={() => scrollTo(id)}
-            className="group flex items-center justify-end gap-3 relative focus:outline-none cursor-pointer"
-            title=""
+            onClick={() => onSelectSection(id)}
+            className="group flex items-center justify-end gap-3 relative focus:outline-none cursor-pointer py-1"
+            aria-label={`Go to ${label}`}
           >
-            {/* Tooltip name */}
-            <span className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute right-8 bg-zinc-950/90 text-white border border-zinc-800/80 text-[10px] tracking-widest uppercase font-semibold py-1.5 px-3 rounded shadow-md font-display whitespace-nowrap backdrop-blur-sm">
+            {/* Tooltip label */}
+            <span className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 absolute right-12 bg-zinc-950/90 text-white border border-zinc-800/80 text-[10px] tracking-widest uppercase font-semibold py-1.5 px-3 rounded shadow-md font-display whitespace-nowrap backdrop-blur-sm">
               {label}
             </span>
-            {/* Dot / line */}
+
+            {/* Horizontal Dash Line */}
             <span
-              className={`transition-all duration-300 rounded-full
-                ${activeIndex === i
-                  ? 'w-8 h-1 bg-brand-red shadow-lg shadow-brand-red/35'
-                  : 'w-2.5 h-1 opacity-45 bg-zinc-500 group-hover:opacity-75 group-hover:bg-zinc-400'
+              className={`h-1.5 rounded-sm transition-all duration-500 ease-out
+                ${isActive
+                  ? 'w-10 bg-brand-red shadow-lg shadow-brand-red/40'
+                  : 'w-4 bg-zinc-400/40 dark:bg-zinc-800/80 group-hover:bg-zinc-550 dark:group-hover:bg-zinc-300 group-hover:w-6'
                 }`}
             />
           </button>
@@ -212,111 +178,69 @@ export default function App() {
     return () => clearInterval(scrollInterval);
   }, [activePage, targetSection]);
 
-  // Manual scroll snapping with smooth animation (only active on the home page)
+  const [activeSection, setActiveSection] = useState('hero');
+
+  // Sync activeSection with activePage
+  useEffect(() => {
+    if (activePage === 'home') {
+      setActiveSection('hero');
+    } else if (activePage === 'services') {
+      setActiveSection('services-engineering');
+    }
+  }, [activePage]);
+
+  // Track scroll position to update active section in pagination
   useEffect(() => {
     const container = scrollContainerRef.current;
-    if (!container || activePage !== 'home') return;
-
-    let scrollTimer: ReturnType<typeof setTimeout>;
-    let lastScrollTop = container.scrollTop;
+    if (!container) return;
 
     const handleScroll = () => {
-      if (isSnapping.current) {
-        lastScrollTop = container.scrollTop;
-        return;
-      }
+      const sectionIds = activePage === 'home'
+        ? ['hero', 'welcome', 'features', 'client-logos']
+        : activePage === 'services'
+          ? ['services-engineering', 'services-fabrication', 'services-electromechanical', 'services-services']
+          : [];
 
-      const currentScrollTop = container.scrollTop;
-      const deltaY = currentScrollTop - lastScrollTop;
+      if (sectionIds.length === 0) return;
 
-      // Threshold to trigger scroll snap (e.g. 40px of scrolling in either direction)
-      if (Math.abs(deltaY) < 40) return;
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean) as HTMLElement[];
 
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const sections = container.querySelectorAll('section');
-        if (!sections.length) return;
+      const containerTop = container.scrollTop;
 
-        const containerHeight = container.clientHeight;
-        const containerScrollHeight = container.scrollHeight;
+      let closestId = sectionIds[0];
+      let closestDist = Infinity;
 
-        // Check if user is scrolled near the bottom, snap to footer
-        const isNearBottom = currentScrollTop + containerHeight >= containerScrollHeight - 120;
-        if (deltaY > 0 && isNearBottom) {
-          isSnapping.current = true;
-          container.scrollTo({
-            top: containerScrollHeight - containerHeight,
-            behavior: 'smooth',
-          });
-          setTimeout(() => {
-            isSnapping.current = false;
-            lastScrollTop = container.scrollTop;
-          }, 600);
-          return;
+      sections.forEach((el) => {
+        // Snap alignment position is offsetTop - 80
+        const dist = Math.abs((el.offsetTop - 80) - containerTop);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestId = el.id;
         }
+      });
 
-        // If we were at the footer and scroll up, snap to the last section
-        const wasAtFooter = lastScrollTop >= containerScrollHeight - containerHeight - 50;
-        if (wasAtFooter && deltaY < 0) {
-          const target = sections[sections.length - 1] as HTMLElement;
-          isSnapping.current = true;
-          container.scrollTo({
-            top: target.offsetTop - 80,
-            behavior: 'smooth',
-          });
-          setTimeout(() => {
-            isSnapping.current = false;
-            lastScrollTop = container.scrollTop;
-          }, 600);
-          return;
-        }
-
-        // Find the index of the section we were previously stable on
-        let currentSectionIndex = 0;
-        let closestDist = Infinity;
-        sections.forEach((section, idx) => {
-          const el = section as HTMLElement;
-          const dist = Math.abs(el.offsetTop - 80 - lastScrollTop);
-          if (dist < closestDist) {
-            closestDist = dist;
-            currentSectionIndex = idx;
-          }
-        });
-
-        // Determine the target section based on scroll direction
-        let targetIndex = currentSectionIndex;
-        if (deltaY > 0) {
-          // Scrolling down -> go to next section
-          if (currentSectionIndex < sections.length - 1) {
-            targetIndex = currentSectionIndex + 1;
-          }
-        } else {
-          // Scrolling up -> go to previous section
-          if (currentSectionIndex > 0) {
-            targetIndex = currentSectionIndex - 1;
-          }
-        }
-
-        const target = sections[targetIndex] as HTMLElement;
-        isSnapping.current = true;
-        container.scrollTo({
-          top: target.offsetTop - 80, // offset navbar
-          behavior: 'smooth',
-        });
-
-        setTimeout(() => {
-          isSnapping.current = false;
-          lastScrollTop = container.scrollTop;
-        }, 600);
-      }, 50); // very short delay for instant responsiveness
+      setActiveSection(closestId);
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimer);
-    };
+    // Initial call
+    handleScroll();
+
+    return () => container.removeEventListener('scroll', handleScroll);
   }, [activePage]);
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    const container = scrollContainerRef.current;
+    if (el && container) {
+      container.scrollTo({
+        top: el.offsetTop - 80, // offset for navbar
+        behavior: 'smooth'
+      });
+    }
+  };
 
   // Listen for ESC key to close modals
   useEffect(() => {
@@ -413,7 +337,7 @@ export default function App() {
   return (
     <div
       ref={scrollContainerRef}
-      className={`h-screen overflow-y-scroll scroll-smooth flex flex-col transition-theme ${darkMode ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
+      className={`h-screen overflow-y-scroll no-scrollbar scroll-smooth snap-y snap-mandatory flex flex-col transition-theme ${darkMode ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
         } font-sans antialiased`}
     >
 
@@ -476,12 +400,17 @@ export default function App() {
         setActivePage={setActivePage}
       />
 
-      {/* ── SECTION INDICATOR ── */}
-      {activePage === 'home' && (
-        <SectionIndicator
-          sectionIds={['hero', 'welcome', 'features', 'client-logos']}
-          scrollContainer={scrollContainerRef}
+      {/* ── DASH PAGINATION ── */}
+      {(activePage === 'home' || activePage === 'services') && (
+        <DashPagination
+          activeSection={activeSection}
+          sectionIds={
+            activePage === 'home'
+              ? ['hero', 'welcome', 'features', 'client-logos']
+              : ['services-engineering', 'services-fabrication', 'services-electromechanical', 'services-services']
+          }
           lang={lang}
+          onSelectSection={scrollToSection}
         />
       )}
 

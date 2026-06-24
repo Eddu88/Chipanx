@@ -19,7 +19,7 @@ export function Welcome({ lang, darkMode }: WelcomeProps) {
   ] as const;
 
   return (
-    <section className="py-24 transition-theme lg:h-screen lg:overflow-hidden min-h-screen snap-start scroll-mt-20 flex items-center" id="welcome">
+    <section className="py-24 transition-theme lg:h-screen lg:overflow-hidden min-h-screen snap-start snap-always scroll-mt-20 flex items-center" id="welcome">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
@@ -28,7 +28,7 @@ export function Welcome({ lang, darkMode }: WelcomeProps) {
             <div className="absolute top-0 left-0 w-full h-full bg-brand-red translate-x-4 translate-y-4 rounded-sm -z-10 opacity-80"></div>
             <div className="bg-brand-lead-mid p-8 sm:p-12 border border-zinc-800 text-white rounded-sm shadow-xl">
               <span className="block font-display text-brand-red text-6xl sm:text-7xl font-extrabold tracking-tighter leading-none mb-3">
-                10+
+                1 5 +
               </span>
               <p className="font-display text-sm tracking-[4px] uppercase text-zinc-400 font-bold mb-8">
                 {lang === 'es' ? 'AÑOS DE EXPERIENCIA ININTERRUMPIDA' : 'YEARS OF CONTINUOUS PROCESSING'}
@@ -50,11 +50,7 @@ export function Welcome({ lang, darkMode }: WelcomeProps) {
               <a
                 href="/assets/brochure-prodiem.pdf"
                 download
-                className={`inline-flex items-center gap-2.5 font-display text-xs tracking-widest font-bold py-3.5 px-6 rounded-sm uppercase transition-all border cursor-pointer ${
-                  darkMode
-                    ? 'border-zinc-800 hover:border-white text-zinc-300 hover:text-white bg-zinc-900/60 hover:bg-zinc-800'
-                    : 'border-zinc-300 hover:border-zinc-900 text-zinc-650 hover:text-zinc-900 bg-white hover:bg-zinc-100'
-                }`}
+                className="inline-flex items-center gap-2.5 bg-zinc-800/10 hover:bg-brand-red text-xxs tracking-widest font-display font-semibold transition-colors rounded-sm uppercase text-zinc-400 hover:text-white px-3 py-1.5 cursor-pointer"
               >
                 <Download size={14} />
                 {lang === 'es' ? 'Descargar Brochure' : 'Download Brochure'}
@@ -116,11 +112,10 @@ export function Welcome({ lang, darkMode }: WelcomeProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className={`w-full p-6 sm:p-8 border rounded-sm ${
-                      darkMode
-                        ? 'border-zinc-800/85 bg-zinc-900/10 shadow-inner'
-                        : 'border-zinc-200 bg-white shadow-sm'
-                    }`}
+                    className={`w-full p-6 sm:p-8 border rounded-sm ${darkMode
+                      ? 'border-zinc-800/85 bg-zinc-900/10 shadow-inner'
+                      : 'border-zinc-200 bg-white shadow-sm'
+                      }`}
                   >
                     {activeTab === 'mission' && (
                       <div className="flex flex-col sm:flex-row items-start gap-4">

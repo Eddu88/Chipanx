@@ -63,7 +63,7 @@ export function Services({ lang, darkMode, setSelectedService }: ServicesProps) 
           <section 
             key={dept.id} 
             id={`services-${dept.id}`}
-            className={`py-24 lg:py-0 transition-theme lg:h-screen lg:overflow-hidden min-h-screen snap-start scroll-mt-20 flex items-center relative ${
+            className={`py-24 lg:py-0 transition-theme lg:h-screen lg:overflow-hidden min-h-screen snap-start snap-always scroll-mt-20 flex items-center relative ${
               darkMode 
                 ? 'bg-zinc-950 text-white' 
                 : 'bg-zinc-50 text-zinc-900'
