@@ -81,14 +81,7 @@ export function Navbar({
             >
               {t.navServices}
             </button>
-            <button
-              onClick={() => setActivePage('calculator')}
-              className={`px-3 py-2 font-display text-xs tracking-wider font-semibold uppercase hover:text-brand-red transition-all cursor-pointer ${
-                activePage === 'calculator' ? 'text-brand-red border-b-2 border-brand-red' : darkMode ? 'text-zinc-350' : 'text-zinc-700'
-              }`}
-            >
-              {t.navCalculator}
-            </button>
+
             <button
               onClick={() => setActivePage('products')}
               className={`px-3 py-2 font-display text-xs tracking-wider font-semibold uppercase hover:text-brand-red transition-all cursor-pointer ${
@@ -220,12 +213,7 @@ export function Navbar({
               >
                 {t.navServices}
               </button>
-              <button
-                onClick={() => { setActivePage('calculator'); setNavOpen(false); }}
-                className={`py-3 text-left border-b border-dashed ${darkMode ? 'border-zinc-900' : 'border-zinc-100'} ${activePage === 'calculator' ? 'text-brand-red font-bold' : ''}`}
-              >
-                {t.navCalculator}
-              </button>
+
               <button
                 onClick={() => { setActivePage('products'); setNavOpen(false); }}
                 className={`py-3 text-left border-b border-dashed ${darkMode ? 'border-zinc-900' : 'border-zinc-100'} ${activePage === 'products' ? 'text-brand-red font-bold' : ''}`}

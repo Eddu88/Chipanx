@@ -77,7 +77,7 @@ export function Contact({
                     {lang === 'es' ? 'OFICINA PRINCIPAL PRODIEM' : 'PRODIEM HEAD OFFICE'}
                   </h4>
                   <p className="text-sm font-mono mt-0.5">
-                    Av. Industrial 123, Lima, Lima, Perú
+                    Av. Circunvalación golf los incas 206-208 torre 3 of. 602-B Santiago de Surco Lima-Perú
                   </p>
                 </div>
               </div>
@@ -198,10 +198,11 @@ export function Contact({
                       {/* Phone Field */}
                       <div>
                         <label className="block text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-2">
-                          {t.formPhone}
+                          {t.formPhone} *
                         </label>
                         <input
                           type="tel"
+                          required
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           className="w-full bg-zinc-950 border border-zinc-800 focus:outline-none focus:border-brand-red p-3 rounded text-sm text-zinc-100 transition-colors"
@@ -233,10 +234,11 @@ export function Contact({
                     {/* Msg Field */}
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-2">
-                        {t.formMsg}
+                        {t.formMsg} *
                       </label>
                       <textarea
                         rows={4}
+                        required
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         className="w-full bg-zinc-950 border border-zinc-800 focus:outline-none focus:border-brand-red p-3 rounded text-sm text-zinc-100 transition-colors placeholder:text-zinc-650"

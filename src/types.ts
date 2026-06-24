@@ -1,4 +1,4 @@
-export type PageType = 'home' | 'about' | 'services' | 'calculator' | 'products' | 'clients' | 'contact';
+export type PageType = 'home' | 'about' | 'services' | 'products' | 'clients' | 'contact';
 
 export interface TranslationSet {
   // Navigation
@@ -6,7 +6,6 @@ export interface TranslationSet {
   navAbout: string;
   navProducts: string;
   navServices: string;
-  navCalculator: string;
   navContact: string;
 
   // Hero Section
@@ -23,7 +22,6 @@ export interface TranslationSet {
   welcomeSub: string;
   welcomeTitle: string;
   welcomeText1: string;
-  welcomeText2: string;
 
   // Services Section
   servicesLabel: string;
@@ -57,20 +55,6 @@ export interface TranslationSet {
     specs: string[];
     img: string;
   }[];
-
-  // Steel Calculator Section
-  calcTitle: string;
-  calcSubtitle: string;
-  calcThick: string;
-  calcWidth: string;
-  calcDensity: string;
-  calcOuterD: string;
-  calcInnerD: string;
-  calcCalculate: string;
-  calcResultWeight: string;
-  calcResultLength: string;
-  calcResultPricing: string;
-  calcEstimationDisclaimer: string;
 
   // Contact Form
   contactTitle: string;
@@ -111,15 +95,14 @@ export const translations: Record<Language, TranslationSet> = {
     navAbout: "NOSOTROS",
     navProducts: "PRODUCTOS",
     navServices: "SERVICIOS",
-    navCalculator: "CALCULADORA",
     navContact: "CONTACTO",
 
-    heroEst: "Est. 2015 · Excelencia en Metalmecánica y Calibración Industrial",
+    heroEst: "PROYECTOS, DISEÑO E INGENIERIA ELECTROMECANICA",
     heroSlides: [
       {
-        title: "METALMECÁNICA Y CALIBRACIÓN INDUSTRIAL",
-        sub: "10+ AÑOS DE PRECISIÓN Y EXCELENCIA OPERATIVA",
-        description: "Servicios integrales de fabricación estructural, reparación de componentes mineros y calibración certificada de instrumentación industrial."
+        title: "CREEMOS QUE CADA CLIENTE ES UNA ASOCIACIÓN A LARGO PLAZO",
+        sub: "15+ AÑOS DE PRECISIÓN Y EXCELENCIA OPERATIVA",
+        description: "Empresa peruana dedicada al desarrollo de actividades metalmecánica, mantenimiento y fabricación."
       },
       {
         title: "MANTENIMIENTO DE EQUIPO MINERO E INDUSTRIAL",
@@ -136,9 +119,8 @@ export const translations: Record<Language, TranslationSet> = {
 
     welcomeLabel: "BIENVENIDOS",
     welcomeSub: "A PRODIEM",
-    welcomeTitle: "Socio Estratégico en Metalmecánica y Calibraciones Industriales",
-    welcomeText1: "PRODIEM (MANTENIMIENTOS CALIBRACIONES INDUSTRIALES METAL PERÚ S.A.C) es una empresa peruana con más de 10 años de experiencia, líder en brindar servicios especializados de metalmecánica, mantenimiento de equipos pesados y calibración de instrumentos para el sector industrial y minero. Nos comprometemos a optimizar la disponibilidad y confiabilidad de los activos de nuestros clientes mediante estándares rigurosos de ingeniería y precisión.",
-    welcomeText2: "Nuestra Política de Calidad nos impulsa a la mejora continua y a la satisfacción de nuestros clientes, garantizando la trazabilidad en cada calibración y la máxima resistencia estructural en cada fabricación. Valores Corporativos: ✓ Compromiso con la Seguridad ✓ Precisión e Integridad ✓ Innovación y Mejora Continua ✓ Orientación al Cliente ✓ Trabajo en Equipo.",
+    welcomeTitle: "Socio Estratégico en Ingeniería Electromecánica",
+    welcomeText1: "PRODIEM (MANTENIMIENTOS CALIBRACIONES INDUSTRIALES METAL PERÚ S.A.C) es una empresa peruana dedicada al desarrollo de actividades metalmecánica, mantenimiento y fabricación, que nace de la unión de sus socios con distintas habilidades profesionales; formando así un equipo de trabajo con una amplia experiencia en el rubro minero e industrial, lo cual nos permite garantizar un correcto desarrollo de sus proyectos y actividades en cada uno de sus procesos.",
 
     servicesLabel: "Qué Hacemos",
     servicesTitle: "Nuestros Servicios",
@@ -247,16 +229,20 @@ export const translations: Record<Language, TranslationSet> = {
 
     featuresList: [
       {
-        title: "Fabricación",
-        desc: "Diseño y manufactura de estructuras metálicas, chutes, tolvas y spools de tuberías bajo especificaciones técnicas estrictas y códigos internacionales."
+        title: "Ingeniería",
+        desc: "Desarrollo de proyectos de ingeniería, modelado 3D, simulación estructural y diseño de detalle para plantas mineras e industriales."
       },
       {
-        title: "Reparación",
-        desc: "Servicios de mantenimiento y soldaduras homologadas para equipos pesados de minería y componentes de desgaste para extender su vida útil."
+        title: "Fabricaciones de Placas y Medios filtrantes",
+        desc: "Manufactura de estructuras metálicas, spools de tuberías, placas de desgaste y sistemas de filtración de alta resistencia."
       },
       {
-        title: "Calibración",
-        desc: "Calibración y certificación metrológica de instrumentos de medición industrial con trazabilidad garantizada y altos estándares de precisión."
+        title: "Servicios Electromecánicos",
+        desc: "Montaje, mantenimiento preventivo y reparación integral de componentes mecánicos, eléctricos e hidráulicos."
+      },
+      {
+        title: "Área de Servicios",
+        desc: "Soporte técnico especializado en campo, paradas de planta, soldadura homologada y mecanizado de precisión in-situ."
       }
     ],
 
@@ -285,19 +271,6 @@ export const translations: Record<Language, TranslationSet> = {
         img: "https://images.unsplash.com/photo-1530973428-5bf2db2e4d71?w=600&q=80"
       }
     ],
-
-    calcTitle: "Calculadora de Peso de Bobinas y Planchas de Acero",
-    calcSubtitle: "Herramienta técnica para ingenieros de PRODIEM. Calcule el peso total aproximado de las bobinas de acero requeridas para su fabricación.",
-    calcThick: "Espesores de Hoja (mm)",
-    calcWidth: "Ancho de la Bobina (mm)",
-    calcDensity: "Densidad del Material (g/cm³)",
-    calcOuterD: "Diámetro Exterior (OD) (mm)",
-    calcInnerD: "Diámetro Interior (ID) / Núcleo (mm)",
-    calcCalculate: "CALCULAR PARÁMETROS",
-    calcResultWeight: "Peso Estimado de la Bobina",
-    calcResultLength: "Largo Total de Hoja en Bobina",
-    calcResultPricing: "Costo Base Procesado Maquila",
-    calcEstimationDisclaimer: "Nota: Los cálculos son estimaciones técnicas que pueden variar según las propiedades metalúrgicas de la materia prima real.",
 
     contactTitle: "PONTE EN CONTACTO",
     contactLine: "Línea Directa de Atención Corporativa",
@@ -346,15 +319,14 @@ export const translations: Record<Language, TranslationSet> = {
     navAbout: "ABOUT US",
     navProducts: "PRODUCTS",
     navServices: "SERVICES",
-    navCalculator: "CALCULATOR",
     navContact: "CONTACT",
 
     heroEst: "Est. 2015 · Excellence in Metal-Mechanics & Industrial Calibration",
     heroSlides: [
       {
-        title: "METAL-MECHANICS & INDUSTRIAL CALIBRATION",
-        sub: "10+ YEARS OF PRECISION AND OPERATIONAL EXCELLENCE",
-        description: "Comprehensive services for structural fabrication, mining component repair, and certified calibration of industrial instrumentation."
+        title: "WE BELIEVE EVERY CLIENT IS A LONG-TERM PARTNERSHIP",
+        sub: "15+ YEARS OF PRECISION AND OPERATIONAL EXCELLENCE",
+        description: "Peruvian company dedicated to the development of metalworking, maintenance, and manufacturing activities."
       },
       {
         title: "MINING & INDUSTRIAL EQUIPMENT MAINTENANCE",
@@ -371,9 +343,8 @@ export const translations: Record<Language, TranslationSet> = {
 
     welcomeLabel: "WELCOME",
     welcomeSub: "TO PRODIEM",
-    welcomeTitle: "Strategic Partner in Metal-Mechanics and Industrial Calibration",
-    welcomeText1: "PRODIEM (MANTENIMIENTOS CALIBRACIONES INDUSTRIALES METAL PERÚ S.A.C) is a Peruvian company with over 10 years of experience, leading the provision of specialized metal-mechanical services, heavy equipment maintenance, and instrument calibration for the industrial and mining sectors. We are committed to optimizing the availability and reliability of our clients' assets through rigorous engineering and precision standards.",
-    welcomeText2: "Our Quality Policy drives us toward continuous improvement and customer satisfaction, ensuring traceability in every calibration and maximum structural strength in every fabrication. Corporate Values: ✓ Safety Commitment ✓ Precision & Integrity ✓ Innovation & Continuous Improvement ✓ Customer Orientation ✓ Teamwork.",
+    welcomeTitle: "Strategic Partner in Electromechanical Engineering",
+    welcomeText1: "PRODIEM (MANTENIMIENTOS CALIBRACIONES INDUSTRIALES METAL PERÚ S.A.C) is a Peruvian company dedicated to the development of metalworking, maintenance, and manufacturing activities, born from the union of its partners with different professional skills; thus forming a work team with wide experience in the mining and industrial sectors, which allows us to guarantee a correct development of your projects and activities in each of their processes.",
 
     servicesLabel: "What We Do",
     servicesTitle: "Our Services",
@@ -482,16 +453,20 @@ export const translations: Record<Language, TranslationSet> = {
 
     featuresList: [
       {
-        title: "Fabrication",
-        desc: "Design and manufacturing of metallic structures, chutes, hoppers, and pipe spools under strict technical specifications and international codes."
+        title: "Engineering",
+        desc: "Development of engineering projects, 3D modeling, structural simulation, and detail design for mining and industrial plants."
       },
       {
-        title: "Repair",
-        desc: "Maintenance services and certified welding for heavy mining equipment and wear parts to extend their operational lifespan."
+        title: "Fabrication of Plates & Filtration Media",
+        desc: "Manufacturing of steel structures, piping spools, wear plates, and high-strength filtration systems."
       },
       {
-        title: "Calibration",
-        desc: "Metrological calibration and certification of industrial measuring instruments with guaranteed traceability and high precision standards."
+        title: "Electromechanical Services",
+        desc: "Assembly, preventive maintenance, and comprehensive repair of mechanical, electrical, and hydraulic components."
+      },
+      {
+        title: "Service Area",
+        desc: "Specialized field technical support, scheduled plant shutdowns, certified welding, and on-site precision machining."
       }
     ],
 
@@ -520,19 +495,6 @@ export const translations: Record<Language, TranslationSet> = {
         img: "https://images.unsplash.com/photo-1530973428-5bf2db2e4d71?w=600&q=80"
       }
     ],
-
-    calcTitle: "Coil & Steel Plate Weight Calculator",
-    calcSubtitle: "Technical tool for PRODIEM engineers. Calculate the approximate weight of steel coils required for your fabrication projects.",
-    calcThick: "Sheet Thickness (mm)",
-    calcWidth: "Coil Width (mm)",
-    calcDensity: "Material Density (g/cm³)",
-    calcOuterD: "Outer Diameter (OD) (mm)",
-    calcInnerD: "Inner Diameter (ID) / Core (mm)",
-    calcCalculate: "CALCULATE METRICS",
-    calcResultWeight: "Estimated Coil Weight",
-    calcResultLength: "Total Sheet Length",
-    calcResultPricing: "Base Processing Tariff Estimated",
-    calcEstimationDisclaimer: "Disclaimer: Calculated results represent close geometric approximations. Actual coil weights vary based on specific mill tolerances.",
 
     contactTitle: "GET IN TOUCH",
     contactLine: "Dedicated Industrial Desk",

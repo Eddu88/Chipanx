@@ -16,15 +16,16 @@ import { Welcome } from './components/sections/Welcome';
 import { Services } from './components/sections/Services';
 import { Features } from './components/sections/Features';
 import { Products } from './components/sections/Products';
-import { Calculator } from './components/sections/Calculator';
 import { Clients } from './components/sections/Clients';
 import { Contact } from './components/sections/Contact';
+import { ClientLogos } from './components/sections/ClientLogos';
 
 // Section labels for tooltips
 const SECTION_LABELS: Record<string, Record<'es' | 'en', string>> = {
   hero: { es: 'Inicio', en: 'Home' },
   welcome: { es: 'Nosotros', en: 'About' },
-  features: { es: 'Ventajas', en: 'Features' }
+  features: { es: 'Servicios', en: 'Features' },
+  'client-logos': { es: 'Clientes', en: 'Clients' }
 };
 
 interface SectionIndicatorProps {
@@ -64,7 +65,7 @@ function SectionIndicator({ sectionIds, scrollContainer, lang }: SectionIndicato
     container.addEventListener('scroll', handleScroll, { passive: true });
     // Initial execution
     handleScroll();
-    
+
     return () => container.removeEventListener('scroll', handleScroll);
   }, [sectionIds, scrollContainer]);
 
@@ -123,6 +124,14 @@ export default function App() {
   });
 
   const [activePage, setActivePage] = useState<PageType>('home');
+  const [targetSection, setTargetSection] = useState<string | null>(null);
+
+  const navigateTo = (page: PageType, sectionId?: string) => {
+    setActivePage(page);
+    if (sectionId) {
+      setTargetSection(sectionId);
+    }
+  };
   const [activeSlide, setActiveSlide] = useState(0);
   const [navOpen, setNavOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string | null>(null);
@@ -176,6 +185,32 @@ export default function App() {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [activePage]);
+
+  // Cross-page scroll to target section
+  useEffect(() => {
+    if (!targetSection) return;
+
+    let attempts = 0;
+    const scrollInterval = setInterval(() => {
+      const el = document.getElementById(targetSection);
+      const container = scrollContainerRef.current;
+      attempts++;
+
+      if (el && container) {
+        container.scrollTo({
+          top: el.offsetTop - 80, // offset for navbar
+          behavior: 'smooth'
+        });
+        clearInterval(scrollInterval);
+        setTargetSection(null);
+      } else if (attempts > 10) {
+        clearInterval(scrollInterval);
+        setTargetSection(null);
+      }
+    }, 100);
+
+    return () => clearInterval(scrollInterval);
+  }, [activePage, targetSection]);
 
   // Manual scroll snapping with smooth animation (only active on the home page)
   useEffect(() => {
@@ -323,7 +358,12 @@ export default function App() {
               setActivePage={setActivePage}
             />
             <Welcome lang={lang} darkMode={darkMode} />
-            <Features lang={lang} />
+            <Features 
+              lang={lang} 
+              darkMode={darkMode}
+              onNavigate={navigateTo} 
+            />
+            <ClientLogos lang={lang} darkMode={darkMode} />
           </>
         );
       case 'about':
@@ -336,14 +376,7 @@ export default function App() {
             setSelectedService={setSelectedService}
           />
         );
-      case 'calculator':
-        return (
-          <Calculator
-            lang={lang}
-            darkMode={darkMode}
-            setActivePage={setActivePage}
-          />
-        );
+
       case 'products':
         return (
           <Products
@@ -415,7 +448,12 @@ export default function App() {
       </main>
 
       {/* ── FOOTER ── */}
-      <Footer lang={lang} />
+      <Footer 
+        lang={lang} 
+        darkMode={darkMode}
+        setActivePage={(page) => navigateTo(page)} 
+        onNavigate={navigateTo} 
+      />
 
       {/* ── INTERACTIVE DRAWER MODAL FOR SERVICES ── */}
       <ServiceModal
@@ -441,7 +479,7 @@ export default function App() {
       {/* ── SECTION INDICATOR ── */}
       {activePage === 'home' && (
         <SectionIndicator
-          sectionIds={['hero', 'welcome', 'features']}
+          sectionIds={['hero', 'welcome', 'features', 'client-logos']}
           scrollContainer={scrollContainerRef}
           lang={lang}
         />

@@ -72,12 +72,7 @@ export function Hero({ lang, activeSlide, setActiveSlide, setActivePage }: HeroP
             >
               {lang === 'es' ? 'EXPLORAR SERVICIOS' : 'EXPLORE SERVICES'}
             </button>
-            <button
-              onClick={() => setActivePage('calculator')}
-              className="border border-zinc-500 hover:border-white text-white hover:bg-white/10 font-display text-sm tracking-widest font-bold py-3.5 px-8 rounded-sm shrink-0 uppercase transition-colors"
-            >
-              {lang === 'es' ? 'CALCULANTE' : 'CALCULATOR'}
-            </button>
+
           </div>
 
         </div>
